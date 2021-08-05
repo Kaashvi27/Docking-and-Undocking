@@ -1,69 +1,50 @@
-var iss, issImg;
-var spacecraft, spacecraftImg1, spacecraftImg2, spacecraftImg3, spacecraftImg4;
-var hasDocked = false;
-var bg;
+var database;
+var back_img;
+var gameState =0;
+var playerCount = 0;
+var allPlayers;
+
+var player, form,game;
+var player1,player2;
+var players;
+var fruits;
+var fruitGroup;
+var fruit1_img, fruit2_img, fruit3_img, fruit4_img, fruit5_img;
+var player_img;
+
 
 function preload(){
-issImg = loadImage("iss.png");
-spacecraftImg1 = loadImage("spacecraft1.png");
-spacecraftImg2 = loadImage("spacecraft2.png");
-spacecraftImg3 = loadImage("spacecraft3.png");
-spacecraftImg4 = loadImage("spacecraft4.png");
-bg = loadImage("spacebg.jpg");
+  back_img = loadImage("images/jungle.jpg");
+  player_img = loadImage("images/basket2.png");
+  fruit1_img = loadImage("images/apple2.png");
+  fruit2_img = loadImage("images/banana2.png");
+  fruit3_img = loadImage("images/melon2.png");
+  fruit4_img = loadImage("images/orange2.png");
+  fruit5_img = loadImage("images/pineapple2.png");
+  fruitGroup = new Group();
 }
-
 function setup() {
-  createCanvas(800,400);
-  //createSprite(400, 200, 50, 50);
+  createCanvas(1000, 600);
+  database = firebase.database();
+  game = new Game();
+  game.getState();
+  game.start();
   
-  iss = createSprite(330,130);
-  iss.addImage(issImg);
-  iss.scale = 0.8;
-  //iss.setCollider("circle",0,0,50);
-  //iss.debug = true;
-
-  spacecraft = createSprite(285,240);
-  spacecraft.addImage(spacecraftImg1);
-  spacecraft.scale = 0.25;
-  spacecraft.depth = iss.depth-1;
-  //spacecraft.setCollider("circle",0,0,200);
-  //spacecraft.debug = true;
-
 }
 
 function draw() {
-  background(bg); 
-  drawSprites();
+  background(back_img);
   
-  if(!hasDocked){
-    spacecraft.x = spacecraft.x + random(-1,1);
-
-    if(keyDown("UP_ARROW")){
-      spacecraft.y = spacecraft.y -4;
-    }
-
-    if(keyDown("DOWN_ARROW")){
-      spacecraft.addImage(spacecraftImg1);
-      spacecraft.y = spacecraft.y + 4;
-    }
-
-    if(keyDown("LEFT_ARROW")){
-      spacecraft.addImage(spacecraftImg3);
-      spacecraft.x = spacecraft.x -4;
-    }
-
-    if(keyDown("RIGHT_ARROW")){
-      spacecraft.addImage(spacecraftImg2);
-      spacecraft.x = spacecraft.x + 4;
-    }
-
+   if (playerCount === 2) {
+     game.update(1);
+   }
+   if (gameState === 1) {
+     clear(); 
+     game.play();
+   }
+   if (gameState === 2) {
     
-  }
-  if(spacecraft.y<=(iss.y+70)&&spacecraft.x<=(iss.x-10)){
-    hasDocked = true;
-    spacecraft.addImage(spacecraftImg1);
-    textSize(25);
-    fill("white");
-    text("Docking Successful!",200, 300);
-  }
+     game.end();
+   }
+   
 }
